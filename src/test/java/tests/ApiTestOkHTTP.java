@@ -1,40 +1,81 @@
 package tests;
 
-import java.io.IOException;
-
 import org.testng.annotations.Test;
 
+import api.PetService;
+import client.ApiClientOkHTTP;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import utils.ConfigUtils;
+import utils.EndpointUtils;
 
 public class ApiTestOkHTTP {
     @Test
-    public void testFindByStatusSoldWithOkHttp() throws IOException {
-        String baseUrl = "http://localhost:8080";
-        String endpoint = "/pet/findByStatus?status=sold";
-        String fullUrl = baseUrl + endpoint;
-
-        OkHttpClient client = new OkHttpClient();
+    public void testGet() {
+        ApiClientOkHTTP client = new ApiClientOkHTTP(new OkHttpClient());
+        PetService petService = new PetService(client);
 
         try{
-            Request request = new Request.Builder()
-                    .url(fullUrl)
-                    .get()
-                    .build();
-            Response response = client.newCall(request).execute();
-            System.out.println("Response Body: " + response.body().string());
+            String response = petService.getSoldPets();
 
-            assertEquals(200, response.code());
+            assertTrue(response.contains("\"id\":23688827"));
+            assertTrue(response.contains("\"id\":23688827"));
+            assertTrue(response.contains("\"name\":\"doggie\""));
+            assertTrue(response.contains("\"status\":\"sold\""));
 
-            assertTrue(response.header("Content-Type").contains("application/json"));
+        }
+        catch (Exception e){
+            System.out.println("Exception: " + e);
+        }
+    }
 
-            String responseBody = response.body().string();
-            assertTrue(responseBody.contains("\"id\":23688827"));
-            assertTrue(responseBody.contains("\"name\":\"doggie\""));
-            assertTrue(responseBody.contains("\"status\":\"sold\""));
+    @Test
+    public void testInvalidGet() {
+        ApiClientOkHTTP client = new ApiClientOkHTTP(new OkHttpClient());
+
+        try{
+            String response = client.get(EndpointUtils.getEndpoint("pet.invalidFindByStatus"));
+
+            assertFalse(response.contains("\"id\":23688827"));
+            assertFalse(response.contains("\"id\":23688827"));
+            assertFalse(response.contains("\"name\":\"doggie\""));
+            assertFalse(response.contains("\"status\":\"sold\""));
+
+        }
+        catch (Exception e){
+            System.out.println("Exception: " + e);
+        }
+    }
+    @Test
+    public void testPost() {
+        ApiClientOkHTTP client = new ApiClientOkHTTP(new OkHttpClient());
+        PetService petService = new PetService(client);
+
+        try{
+            String response = petService.postSoldPets(ConfigUtils.readJsonFile("src/main/resources/mappings/post.json"));
+
+            assertTrue(response.contains("\"id\":9222968140497181000"));
+            assertTrue(response.contains("\"name\":\"doggie\""));
+            assertTrue(response.contains("\"status\":\"available\""));
+
+        }
+        catch (Exception e){
+            System.out.println("Exception: " + e);
+        }
+    }
+    @Test
+    public void testPut() {
+        ApiClientOkHTTP client = new ApiClientOkHTTP(new OkHttpClient());
+        PetService petService = new PetService(client);
+
+        try{
+            String response = petService.putSoldPets(ConfigUtils.readJsonFile("src/main/resources/mappings/put.json"));
+
+            assertTrue(response.contains("\"id\":9222968140497181000"));
+            assertTrue(response.contains("\"name\":\"doggie\""));
+            assertTrue(response.contains("\"status\":\"available\""));
+
         }
         catch (Exception e){
             System.out.println("Exception: " + e);
