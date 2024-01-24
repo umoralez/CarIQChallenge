@@ -11,7 +11,8 @@ Project based on mock PetStore API using WireMock, Docker, Gradle, TestNG, RestA
 ## How to run
 Create a docker container with WireMock server:
 ```bash
-docker run -d -p 8080:8080 rodolpheche/wiremock
+docker build -t cariq -f src/main/resources/Dockerfile .
+docker run -p 8080:8080 -v $(pwd)/src/main/resources/mappings:/home/mappings cariq
 ```
 Run tests:
 ```bash
