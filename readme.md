@@ -1,4 +1,4 @@
-# GoCarIQ
+# CarIQ
 
 Project based on mock PetStore API using WireMock, Docker, Gradle, TestNG, RestAssured, OkHTTP.
 
