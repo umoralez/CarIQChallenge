@@ -9,11 +9,22 @@ repositories {
     mavenCentral()
 }
 
+wrapper {
+    gradleVersion = '7.4'
+}
+
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.networknt:json-schema-validator:1.0.82'
+    implementation 'org.testng:testng:7.8.0'
+    implementation "org.wiremock:wiremock:3.0.0"
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7.1'
+    implementation 'io.rest-assured:json-schema-validator:5.3.1'
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    implementation 'io.rest-assured:rest-assured:5.3.0'
 }
 
 test {
-    useJUnitPlatform()
+    useTestNG() {
+    }
 }
